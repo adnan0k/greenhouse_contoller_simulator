@@ -44,9 +44,18 @@ public:
             state = EMERGENCY_STOP;
         }
 
-        int moisture = (data.Data >> 0) & 0xF; // Bits 0-3
-        int temperature = (data.Data >> 4) & 0x7F; // Bits 4-10
-        int sunlight = (data.Data >> 11) & 0x1FFF; // Bits 11-24
+        // Extracting values using masks and shifts
+        int moisture = data.Data & 0x000F; // Bits 0-3
+        int temperature = (data.Data & 0x07F0) >> 4; // Bits 4-10
+        int sunlight = (data.Data & 0x7800) >> 11; // Bits 11-24
+
+        // Signed bit handling for temperature (7 bits)
+        int tempSign = (temperature & 0x40) >> 6; // Bit 6 is the sign bit
+        int tempValue = temperature & 0x3F; // Bits 0-5 are the magnitude
+        
+        // Converting to negative if sign bit is set
+        if (tempSign == 1)
+            temperature = -tempValue; 
 
         // Output Control based on state
         // Water Pump Control
