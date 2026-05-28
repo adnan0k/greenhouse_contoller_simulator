@@ -4,7 +4,7 @@
     * Created on: 2024-06-01
 */ 
 
-#include <string.h>
+#include <string>
 #include <cstdint>
 using namespace std;
 
@@ -38,5 +38,20 @@ public:
         ControllerOutputs outputs = {false, false, false, false};
 
         return outputs;
+    }
+
+    string getState() {
+        switch (state) {
+            case IDLE:
+                return "Idle";
+            case IRRIGATION:
+                return "Irrigation";
+            case CRITICAL_CLIMATE:
+                return "Critical Climate";
+            case EMERGENCY_STOP:
+                return "Emergency Stop";
+            default:
+                return "Unknown State";
+        }
     }
 };
