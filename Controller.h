@@ -4,6 +4,7 @@
     * Created on: 2024-06-01
 */ 
 
+#include <iostream>
 #include <string>
 #include <cstdint>
 using namespace std;
@@ -56,12 +57,49 @@ public:
         // Converting to negative if sign bit is set
         if (tempSign == 1)
             temperature = -tempValue; 
+        
+        /* FINITE STATE MACHINE
+            Optimal thresholds for moisture, temperature, and sunlight are defined based on typical plant requirements.
+            Temperature is best between 10°C and 32°C.
+            Soil moisture should be above 20% (3 out of 15) and below 80% (12 out of 15).
+            Sunlight should be between 40% (6 out of 15) to 60% (9 out of 15) of full sunlight.
+            Soil moisture and sunlight are rated from 0-15, as they are represented as 4-bit values.
+        */
+
+        switch (state) {
+            case IDLE:
+                if (moisture < 3) 
+                    state = IRRIGATION;
+                else if (temperature > 32 || temperature < 10 || sunlight < 12)
+                    state = CRITICAL_CLIMATE;
+                break;
+
+            case IRRIGATION:
+                if (moisture >= 12) {  
+                    if (temperature > 32  || temperature < 10 || sunlight < 12)
+                        state = CRITICAL_CLIMATE;
+                    else
+                        state = IDLE;
+                }
+                break;
+
+            case CRITICAL_CLIMATE:
+                if (temperature <= 32 && temperature >= 10 && sunlight <= 6)  
+                    state = IDLE;
+                break;
+                
+            case EMERGENCY_STOP:
+                outputs.emergencyStatus = true;
+                break;
+        }
 
         // Output Control based on state
         // Water Pump Control
         if (state == IRRIGATION) {
-            if (temperature <= 0)
+            if (temperature <= 0) {
                 outputs.pumpOn = false;
+                cout << "Pump is turned OFF due to freezing temperatures." << endl;
+            }
             else
                 outputs.pumpOn = true;
         }
@@ -70,7 +108,7 @@ public:
         if (state == CRITICAL_CLIMATE) {
             if (temperature < 10)
                 outputs.heaterOn = true;
-            else if (temperature > 35 || sunlight > 12)
+            else if (temperature > 32 || sunlight > 9) 
                 outputs.fanOn = true;
         }
 
