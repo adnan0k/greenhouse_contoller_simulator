@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include<bitset>
 using namespace std;
 
 
@@ -61,6 +61,20 @@ class Equipment{
     }
 
 };
+
+int powerTrackingAlgo(Equipment* eqarr, int count){
+    int totalPowerUsage=0;
+    for(int i=0; i<count; i++){
+        if(totalPowerUsage < MAX_POWER_OF_SYSTEM){
+
+            totalPowerUsage += eqarr[i].getPowerUsage();
+        }else{
+            cout<<"Power threshold will exceed so cannot turn this sensor on";
+            eqarr[i].setOff();
+        }
+    }
+    return totalPowerUsage;
+}
 
 
 int main(){
