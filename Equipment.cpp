@@ -80,6 +80,21 @@ int powerTrackingAlgo(Equipment* eqarr, int count){
 int main(){
 
 
+    Equipment e1("fan",150,0,"Air Temp",33.1);
+
+    e1.setOn();
+    cout<< bitset<8>(e1.getPositionBits())<<endl;
+    e1.setOff();
+   
+    
+    Equipment e2("heater",100,1,"Air Temp",33.2);
+    e2.setOn();
+    cout<< bitset<8>(e2.getPositionBits())<<endl;
+
+    Equipment eqarr[] = {e1,e2};
+
+    cout<<powerTrackingAlgo(eqarr,2)<<endl;
+
 
 
     return 0;
