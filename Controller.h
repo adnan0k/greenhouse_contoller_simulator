@@ -48,6 +48,23 @@ public:
         int temperature = (data.Data >> 4) & 0x7F; // Bits 4-10
         int sunlight = (data.Data >> 11) & 0x1FFF; // Bits 11-24
 
+        // Output Control based on state
+        // Water Pump Control
+        if (state == IRRIGATION) {
+            if (temperature <= 0)
+                outputs.pumpOn = false;
+            else
+                outputs.pumpOn = true;
+        }
+
+        // Heater and Fan Control
+        if (state == CRITICAL_CLIMATE) {
+            if (temperature < 10)
+                outputs.heaterOn = true;
+            else if (temperature > 35 || sunlight > 12)
+                outputs.fanOn = true;
+        }
+
         return outputs;
     }
 
