@@ -48,7 +48,7 @@ public:
         // Extracting values using masks and shifts
         int moisture = data.Data & 0x000F; // Bits 0-3
         int temperature = (data.Data & 0x07F0) >> 4; // Bits 4-10
-        int sunlight = (data.Data & 0x7800) >> 11; // Bits 11-24
+        int sunlight = (data.Data & 0x7800) >> 11; // Bits 11-14
 
         // Signed bit handling for temperature (7 bits)
         int tempSign = (temperature & 0x40) >> 6; // Bit 6 is the sign bit
@@ -68,15 +68,17 @@ public:
 
         switch (state) {
             case IDLE:
-                if (moisture < 3) 
-                    state = IRRIGATION;
-                else if (temperature > 32 || temperature < 10 || sunlight < 12)
+                if (temperature > 32 || temperature < 10 || sunlight > 9) {
                     state = CRITICAL_CLIMATE;
+                }
+                else if (moisture < 3) {
+                    state = IRRIGATION;
+                }
                 break;
 
             case IRRIGATION:
                 if (moisture >= 12) {  
-                    if (temperature > 32  || temperature < 10 || sunlight < 12)
+                    if (temperature > 32  || temperature < 10 || sunlight > 9)
                         state = CRITICAL_CLIMATE;
                     else
                         state = IDLE;
@@ -84,7 +86,7 @@ public:
                 break;
 
             case CRITICAL_CLIMATE:
-                if (temperature <= 32 && temperature >= 10 && sunlight <= 6)  
+                if (temperature <= 32 && temperature >= 10 && sunlight <= 9)  
                     state = IDLE;
                 break;
                 
@@ -106,10 +108,29 @@ public:
 
         // Heater and Fan Control
         if (state == CRITICAL_CLIMATE) {
-            if (temperature < 10)
-                outputs.heaterOn = true;
-            else if (temperature > 32 || sunlight > 9) 
-                outputs.fanOn = true;
+            if (moisture < 3) {
+                if (temperature <= 0) {
+                    outputs.heaterOn = true;
+                    outputs.pumpOn = false; // To prevent water in pipes from freezing
+                    cout << "Pump is turned OFF due to freezing temperatures." << endl;
+                }
+                else if (temperature > 0 && temperature < 10) {
+                    outputs.heaterOn = true;
+                    outputs.pumpOn = true;
+                }
+                else if (temperature > 32 || sunlight > 9) {
+                    outputs.fanOn = true;
+                    outputs.pumpOn = true;
+                }
+            }
+            else {
+                if (temperature > 32 || sunlight > 9) {
+                    outputs.fanOn = true;
+                }
+                else if (temperature < 10) {
+                    outputs.heaterOn = true;
+                }
+            }
         }
 
         return outputs;
