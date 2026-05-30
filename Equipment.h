@@ -72,17 +72,17 @@ int powerTrackingAlgo(Equipment* eqarr, int count){
 
 
 
-bool TurnOnSensorRequest(Equipment& sensor, int currentLoad){
-    if(sensor.getIsOn()){
+bool TurnOnDeviceRequest(Equipment& eq, int currentLoad){
+    if(eq.getIsOn()){
         return true;
     }
 
-    if(currentLoad + sensor.getPowerRating() <= MAX_POWER_OF_SYSTEM){
-        sensor.setOn();
-        cout << sensor.getName() << " turned ON Successfully." << endl;
+    if(currentLoad + eq.getPowerRating() <= MAX_POWER_OF_SYSTEM){
+        eq.setOn();
+        cout << eq.getName() << " turned ON Successfully." << endl;
         return true;
     }else{
-        cout<<"Cannot Turn On the " << sensor.getName() << " The power limit will be exceeded from " << MAX_POWER_OF_SYSTEM << endl;
+        cout<<"Cannot Turn On the " << eq.getName() << " The power limit will be exceeded from " << MAX_POWER_OF_SYSTEM << endl;
         return false;
     }
 }

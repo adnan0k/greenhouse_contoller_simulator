@@ -20,7 +20,6 @@ int main() {
     cout << " GREENHOUSE SIMULATOR TICK INITIALIZED  " << endl;
     cout << "========================================" << endl;
 
-    // 3. Create a simulated 16-bit environmental reading: HEATWAVE
     uint16_t mockMoisture = 8;              // Perfect moisture 
     uint16_t mockTemp = 38 << 4;            // 38 Degrees Celsius (Too hot!)
     uint16_t mockSunlight = 14 << 11;       // Very bright sunlight
@@ -39,13 +38,13 @@ int main() {
         cout << "[CRITICAL] EMERGENCY STOP! Shutting down all hardware." << endl;
         for (int i = 0; i < equipmentCount; i++) eqarr[i].setOff();
     } else {
-        if (commands.fanOn) TurnOnSensorRequest(eqarr[0], powerTrackingAlgo(eqarr, equipmentCount));
+        if (commands.fanOn) TurnOnDeviceRequest(eqarr[0], powerTrackingAlgo(eqarr, equipmentCount));
         else eqarr[0].setOff();
 
-        if (commands.heaterOn) TurnOnSensorRequest(eqarr[1], powerTrackingAlgo(eqarr, equipmentCount));
+        if (commands.heaterOn) TurnOnDeviceRequest(eqarr[1], powerTrackingAlgo(eqarr, equipmentCount));
         else eqarr[1].setOff();
 
-        if (commands.pumpOn) TurnOnSensorRequest(eqarr[2], powerTrackingAlgo(eqarr, equipmentCount));
+        if (commands.pumpOn) TurnOnDeviceRequest(eqarr[2], powerTrackingAlgo(eqarr, equipmentCount));
         else eqarr[2].setOff();
     }
 
