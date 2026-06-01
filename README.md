@@ -1,4 +1,4 @@
-    # Project Title: Automated Smart Greenhouse Monitoring and Control System
+## Project Title: Automated Smart Greenhouse Monitoring and Control System
 
 ## Project Overview
 This project is a simulation-based system designed to automate and monitor greenhouse environments. It aims to reduce manual intervention by continuously tracking environmental conditions such as temperature, humidity, soil moisture, and light levels, and automatically controlling relevant actuators like fans, water pumps, and lights.
