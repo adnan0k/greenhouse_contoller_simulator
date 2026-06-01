@@ -34,7 +34,7 @@ class Equipment{
 
     }
 
-    u_int8_t getBitMask(){
+    uint8_t getBitMask(){
         return (1<<location);
     }
 
